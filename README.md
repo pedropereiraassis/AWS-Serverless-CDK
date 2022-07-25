@@ -1,6 +1,9 @@
-# Welcome to your CDK TypeScript project
+# ECommerceAWS
+Simple ECommerce serverless application with AWS Lambda, DynamoDB, SNS, SQS, S3, EventBridge and API Gateway using AWS-CDK Toolkit and TypeScript.
 
-This is a blank project for CDK development with TypeScript.
+## Welcome to your CDK TypeScript project
+
+This is a project for CDK development with TypeScript.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
