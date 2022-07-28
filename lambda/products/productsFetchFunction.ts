@@ -1,10 +1,10 @@
 require('dotenv').config();
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
 import { ProductRepository } from '/opt/nodejs/productsLayer';
-import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { DynamoDB } from 'aws-sdk';
 
 const productsDdb = process.env.PRODUCTS_DDB!;
-const ddbClient = new DocumentClient();
+const ddbClient = new DynamoDB.DocumentClient();
 const productRepository = new ProductRepository(ddbClient, productsDdb);
 
 export async function handler(event: APIGatewayProxyEvent, 
