@@ -5,7 +5,7 @@ import { App, Environment } from 'aws-cdk-lib';
 import { ProductsAppStack } from '../lib/productsApp-stack';
 import { ECommerceApiStack } from '../lib/ecommerceApi-stack';
 import { ProductsAppLayersStack } from '../lib/productsAppLayers-Stack';
-import { EventsDdbStack } from 'lib/eventsDdb-stack';
+import { EventsDdbStack } from '../lib/eventsDdb-stack';
 
 const app = new App();
 
