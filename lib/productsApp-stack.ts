@@ -31,12 +31,16 @@ export class ProductsAppStack extends Stack {
     });
 
     // Products Layer
-    const productsLayerArn = StringParameter.valueForStringParameter(this, 'ProductsLayerVersionArn');
-    const productsLayer = LayerVersion.fromLayerVersionArn(this, 'ProductsLayerVersionArn', productsLayerArn);
+    const productsLayerArn = StringParameter
+      .valueForStringParameter(this, 'ProductsLayerVersionArn');
+    const productsLayer = LayerVersion
+      .fromLayerVersionArn(this, 'ProductsLayerVersionArn', productsLayerArn);
 
     // Products Events Layer
-    const productsEventsLayerArn = StringParameter.valueForStringParameter(this, 'ProductsEventsLayerVersionArn');
-    const productsEventsLayer = LayerVersion.fromLayerVersionArn(this, 'ProductsEventsLayerVersionArn', productsEventsLayerArn);
+    const productsEventsLayerArn = StringParameter
+      .valueForStringParameter(this, 'ProductsEventsLayerVersionArn');
+    const productsEventsLayer = LayerVersion
+      .fromLayerVersionArn(this, 'ProductsEventsLayerVersionArn', productsEventsLayerArn);
     
     const productsEventsHandler = new NodejsFunction(this, 'ProductsEventsFunction',
     {
