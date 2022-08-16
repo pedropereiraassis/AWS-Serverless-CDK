@@ -35,12 +35,16 @@ export class ECommerceApiStack extends Stack {
       }
     });
 
+    this.createProductsService(props, api);
+  }
+
+  private createProductsService(props: ECommerceApiStackProps, api: RestApi) {
     const productsFetchIntegration = new LambdaIntegration(props.productsFetchHandler);
 
     // GET /products
     const productsResource = api.root.addResource('products');
     productsResource.addMethod('GET', productsFetchIntegration);
-  
+
     // GET /products/{id}
     const productIdResource = productsResource.addResource('{id}');
     productIdResource.addMethod('GET', productsFetchIntegration);
