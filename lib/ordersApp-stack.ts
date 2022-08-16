@@ -3,7 +3,7 @@ import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
 import { LambdaInsightsVersion, LayerVersion, Tracing } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 
 interface OrdersAppStackProps extends StackProps {
   productsDdb: Table

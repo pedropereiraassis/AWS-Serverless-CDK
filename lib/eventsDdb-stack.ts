@@ -1,6 +1,6 @@
 import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 
 export class EventsDdbStack extends Stack {
   readonly table: Table;
