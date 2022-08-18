@@ -22,5 +22,21 @@ export class OrdersAppLayersStack extends Stack {
         stringValue: ordersLayer.layerVersionArn
       }
     );
+
+    const ordersApiLayer = new LayerVersion(this, 'OrdersApiLayer',
+      {
+        code: Code.fromAsset('lambda/orders/layers/ordersApiLayer'),
+        compatibleRuntimes: [Runtime.NODEJS_14_X],
+        layerVersionName: 'OrdersApiLayer',
+        removalPolicy: RemovalPolicy.RETAIN
+      }
+    );
+
+    new StringParameter(this, 'OrdersApiLayerVersionArn', 
+      {
+        parameterName: 'OrdersApiLayerVersionArn',
+        stringValue: ordersApiLayer.layerVersionArn
+      }
+    );
   }
 }
