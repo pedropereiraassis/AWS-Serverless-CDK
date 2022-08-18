@@ -38,6 +38,12 @@ export class OrdersAppStack extends Stack {
     const ordersLayer = LayerVersion
       .fromLayerVersionArn(this, 'OrdersLayerVersionArn', ordersLayerArn);
     
+    // Orders API Layer
+    const ordersApiLayerArn = StringParameter
+      .valueForStringParameter(this, 'OrdersApiLayerVersionArn');
+    const ordersApiLayer = LayerVersion
+      .fromLayerVersionArn(this, 'OrdersApiLayerVersionArn', ordersApiLayerArn);
+    
       // Products Layer
     const productsLayerArn = StringParameter
       .valueForStringParameter(this, 'ProductsLayerVersionArn');
@@ -59,7 +65,7 @@ export class OrdersAppStack extends Stack {
           PRODUCTS_DDB: props.productsDdb.tableName,
           ORDERS_DDB: ordersDdb.tableName
         },
-        layers: [ordersLayer, productsLayer],
+        layers: [ordersLayer, productsLayer, ordersApiLayer],
         tracing: Tracing.ACTIVE,
         insightsVersion: LambdaInsightsVersion.VERSION_1_0_119_0
       }
