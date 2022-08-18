@@ -8,17 +8,19 @@ export class OrdersAppLayersStack extends Stack {
     super(scope, id, props);
     
     const ordersLayer = new LayerVersion(this, 'OrdersLayer',
-    {
-      code: Code.fromAsset('lambda/orders/layers/ordersLayer'),
-      compatibleRuntimes: [Runtime.NODEJS_14_X],
-      layerVersionName: 'OrdersLayer',
-      removalPolicy: RemovalPolicy.RETAIN
-    });
+      {
+        code: Code.fromAsset('lambda/orders/layers/ordersLayer'),
+        compatibleRuntimes: [Runtime.NODEJS_14_X],
+        layerVersionName: 'OrdersLayer',
+        removalPolicy: RemovalPolicy.RETAIN
+      }
+    );
 
     new StringParameter(this, 'OrdersLayerVersionArn', 
-    {
-      parameterName: 'OrdersLayerVersionArn',
-      stringValue: ordersLayer.layerVersionArn
-    })
+      {
+        parameterName: 'OrdersLayerVersionArn',
+        stringValue: ordersLayer.layerVersionArn
+      }
+    );
   }
 }

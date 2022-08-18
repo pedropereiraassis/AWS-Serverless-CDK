@@ -18,23 +18,25 @@ export class ECommerceApiStack extends Stack {
 
     const logGroup = new LogGroup(this, 'ECommerceApiLogs');
 
-    const api = new RestApi(this, 'ECommerceApi', {
-      restApiName: 'ECommerceApi',
-      deployOptions: {
-        accessLogDestination: new LogGroupLogDestination(logGroup),
-        accessLogFormat: AccessLogFormat.jsonWithStandardFields({
-          httpMethod: true,
-          ip: true,
-          protocol: true,
-          requestTime: true,
-          resourcePath: true,
-          responseLength: true,
-          status: true,
-          caller: true,
-          user: true
-        })
+    const api = new RestApi(this, 'ECommerceApi',
+      {
+        restApiName: 'ECommerceApi',
+        deployOptions: {
+          accessLogDestination: new LogGroupLogDestination(logGroup),
+          accessLogFormat: AccessLogFormat.jsonWithStandardFields({
+            httpMethod: true,
+            ip: true,
+            protocol: true,
+            requestTime: true,
+            resourcePath: true,
+            responseLength: true,
+            status: true,
+            caller: true,
+            user: true
+          })
+        }
       }
-    });
+    );
 
     this.createProductsService(props, api);
     this.createOrdersService(props, api);
@@ -52,21 +54,23 @@ export class ECommerceApiStack extends Stack {
     ordersResource.addMethod('GET', ordersIntegration);
 
     const orderDeletionValidator = new RequestValidator(this, 'OrderDeletionValidator',
-    {
-      restApi: api,
-      requestValidatorName: 'OrderDeletionValidator',
-      validateRequestParameters: true
-    });
+      {
+        restApi: api,
+        requestValidatorName: 'OrderDeletionValidator',
+        validateRequestParameters: true
+      }
+    );
 
     //DELETE /orders?email=paul@email.com&orderId=123
     ordersResource.addMethod('DELETE', ordersIntegration,
-    {
-      requestParameters: {
-        'method.request.querystring.email': true,
-        'method.request.querystring.orderId': true
-      },
-      requestValidator: orderDeletionValidator
-    });
+      {
+        requestParameters: {
+          'method.request.querystring.email': true,
+          'method.request.querystring.orderId': true
+        },
+        requestValidator: orderDeletionValidator
+      }
+    );
 
     //POST /orders
     ordersResource.addMethod('POST', ordersIntegration);

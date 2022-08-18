@@ -18,17 +18,18 @@ export class ProductsAppStack extends Stack {
     super(scope, id, props);
 
     this.productsDdb = new Table(this, 'ProductsDdb',
-    {
-      tableName: 'products',
-      removalPolicy: RemovalPolicy.DESTROY,
-      partitionKey: {
-        name: 'id',
-        type: AttributeType.STRING
-      },
-      billingMode: BillingMode.PROVISIONED,
-      readCapacity: 1,
-      writeCapacity: 1
-    });
+      {
+        tableName: 'products',
+        removalPolicy: RemovalPolicy.DESTROY,
+        partitionKey: {
+          name: 'id',
+          type: AttributeType.STRING
+        },
+        billingMode: BillingMode.PROVISIONED,
+        readCapacity: 1,
+        writeCapacity: 1
+      }
+    );
 
     // Products Layer
     const productsLayerArn = StringParameter
@@ -43,64 +44,67 @@ export class ProductsAppStack extends Stack {
       .fromLayerVersionArn(this, 'ProductsEventsLayerVersionArn', productsEventsLayerArn);
     
     const productsEventsHandler = new NodejsFunction(this, 'ProductsEventsFunction',
-    {
-      functionName: 'ProductsEventsFunction',
-      entry: 'lambda/products/productsEventsFunction.ts',
-      handler: 'handler',
-      memorySize: 128,
-      timeout: Duration.seconds(2),
-      bundling: {
-        minify: true,
-        sourceMap: false
-      },
-      environment: {
-        EVENTS_DDB: props.eventsDdb.tableName
-      },
-      layers: [productsEventsLayer],
-      tracing: Tracing.ACTIVE,
-      insightsVersion: LambdaInsightsVersion.VERSION_1_0_119_0
-    });
+      {
+        functionName: 'ProductsEventsFunction',
+        entry: 'lambda/products/productsEventsFunction.ts',
+        handler: 'handler',
+        memorySize: 128,
+        timeout: Duration.seconds(2),
+        bundling: {
+          minify: true,
+          sourceMap: false
+        },
+        environment: {
+          EVENTS_DDB: props.eventsDdb.tableName
+        },
+        layers: [productsEventsLayer],
+        tracing: Tracing.ACTIVE,
+        insightsVersion: LambdaInsightsVersion.VERSION_1_0_119_0
+      }
+    );
     props.eventsDdb.grantWriteData(productsEventsHandler);
 
     this.productsFetchHandler = new NodejsFunction(this, 'ProductsFetchFunction',
-    {
-      functionName: 'ProductsFetchFunction',
-      entry: 'lambda/products/productsFetchFunction.ts',
-      handler: 'handler',
-      memorySize: 128,
-      timeout: Duration.seconds(5),
-      bundling: {
-        minify: true,
-        sourceMap: false
-      },
-      environment: {
-        PRODUCTS_DDB: this.productsDdb.tableName
-      },
-      layers: [productsLayer],
-      tracing: Tracing.ACTIVE,
-      insightsVersion: LambdaInsightsVersion.VERSION_1_0_119_0
-    });
+      {
+        functionName: 'ProductsFetchFunction',
+        entry: 'lambda/products/productsFetchFunction.ts',
+        handler: 'handler',
+        memorySize: 128,
+        timeout: Duration.seconds(5),
+        bundling: {
+          minify: true,
+          sourceMap: false
+        },
+        environment: {
+          PRODUCTS_DDB: this.productsDdb.tableName
+        },
+        layers: [productsLayer],
+        tracing: Tracing.ACTIVE,
+        insightsVersion: LambdaInsightsVersion.VERSION_1_0_119_0
+      }
+    );
     this.productsDdb.grantReadData(this.productsFetchHandler);
     
     this.productsAdminHandler = new NodejsFunction(this, 'ProductsAdminFunction',
-    {
-      functionName: 'ProductsAdminFunction',
-      entry: 'lambda/products/productsAdminFunction.ts',
-      handler: 'handler',
-      memorySize: 128,
-      timeout: Duration.seconds(5),
-      bundling: {
-        minify: true,
-        sourceMap: false
-      },
-      environment: {
-        PRODUCTS_DDB: this.productsDdb.tableName,
-        PRODUCTS_EVENTS_FUNCTION_NAME: productsEventsHandler.functionName
-      },
-      layers: [productsLayer, productsEventsLayer],
-      tracing: Tracing.ACTIVE,
-      insightsVersion: LambdaInsightsVersion.VERSION_1_0_119_0
-    });
+      {
+        functionName: 'ProductsAdminFunction',
+        entry: 'lambda/products/productsAdminFunction.ts',
+        handler: 'handler',
+        memorySize: 128,
+        timeout: Duration.seconds(5),
+        bundling: {
+          minify: true,
+          sourceMap: false
+        },
+        environment: {
+          PRODUCTS_DDB: this.productsDdb.tableName,
+          PRODUCTS_EVENTS_FUNCTION_NAME: productsEventsHandler.functionName
+        },
+        layers: [productsLayer, productsEventsLayer],
+        tracing: Tracing.ACTIVE,
+        insightsVersion: LambdaInsightsVersion.VERSION_1_0_119_0
+      }
+    );
     this.productsDdb.grantWriteData(this.productsAdminHandler);
     productsEventsHandler.grantInvoke(this.productsAdminHandler);
   }

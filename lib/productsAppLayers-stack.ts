@@ -9,29 +9,33 @@ export class ProductsAppLayersStack extends Stack {
     super(scope, id, props);
 
     const productsLayers = new LayerVersion(this, 'ProductsLayer',
-    {
-      code: Code.fromAsset('lambda/products/layers/productsLayer'),
-      compatibleRuntimes: [Runtime.NODEJS_14_X],
-      layerVersionName: 'ProductsLayer',
-      removalPolicy: RemovalPolicy.RETAIN
-    });
+      {
+        code: Code.fromAsset('lambda/products/layers/productsLayer'),
+        compatibleRuntimes: [Runtime.NODEJS_14_X],
+        layerVersionName: 'ProductsLayer',
+        removalPolicy: RemovalPolicy.RETAIN
+      }
+    );
     new StringParameter(this, 'ProductsLayerVersionArn',
-    {
-      parameterName: 'ProductsLayerVersionArn',
-      stringValue: productsLayers.layerVersionArn
-    });
+      {
+        parameterName: 'ProductsLayerVersionArn',
+        stringValue: productsLayers.layerVersionArn
+      }
+    );
 
     const productsEventsLayers = new LayerVersion(this, 'ProductsEventsLayer',
-    {
-      code: Code.fromAsset('lambda/products/layers/productsEventsLayer'),
-      compatibleRuntimes: [Runtime.NODEJS_14_X],
-      layerVersionName: 'ProductsEventsLayer',
-      removalPolicy: RemovalPolicy.RETAIN
-    });
+      {
+        code: Code.fromAsset('lambda/products/layers/productsEventsLayer'),
+        compatibleRuntimes: [Runtime.NODEJS_14_X],
+        layerVersionName: 'ProductsEventsLayer',
+        removalPolicy: RemovalPolicy.RETAIN
+      }
+    );
     new StringParameter(this, 'ProductsEventsLayerVersionArn',
-    {
-      parameterName: 'ProductsEventsLayerVersionArn',
-      stringValue: productsEventsLayers.layerVersionArn
-    });
+      {
+        parameterName: 'ProductsEventsLayerVersionArn',
+        stringValue: productsEventsLayers.layerVersionArn
+      }
+    );
   }
 }

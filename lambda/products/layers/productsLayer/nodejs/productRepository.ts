@@ -54,13 +54,15 @@ export class ProductRepository {
   }
 
   async deleteProduct(productId: string): Promise<Product> {
-    const data = await this.ddbClient.delete({
-      TableName: this.productsDdb,
-      Key: {
-        id: productId
-      },
-      ReturnValues: 'ALL_OLD'
-    }).promise();
+    const data = await this.ddbClient.delete(
+      {
+        TableName: this.productsDdb,
+        Key: {
+          id: productId
+        },
+        ReturnValues: 'ALL_OLD'
+      }
+    ).promise();
 
     if (data.Attributes) {
       return data.Attributes as Product;
@@ -70,22 +72,24 @@ export class ProductRepository {
   }
 
   async updateProduct(productId: string, product: Product): Promise<Product> {
-    const data = await this.ddbClient.update({
-      TableName: this.productsDdb,
-      Key: {
-        id: productId
-      },
-      ConditionExpression: 'attribute_exists(id)',
-      ReturnValues: 'UPDATED_NEW',
-      UpdateExpression: 'set productName = :n, code = :c, price = :p, model = :m, productUrl = :u',
-      ExpressionAttributeValues: {
-        ':n': product.productName,
-        ':c': product.code,
-        ':p': product.price,
-        ':m': product.model,
-        ':u': product.productUrl
+    const data = await this.ddbClient.update(
+      {
+        TableName: this.productsDdb,
+        Key: {
+          id: productId
+        },
+        ConditionExpression: 'attribute_exists(id)',
+        ReturnValues: 'UPDATED_NEW',
+        UpdateExpression: 'set productName = :n, code = :c, price = :p, model = :m, productUrl = :u',
+        ExpressionAttributeValues: {
+          ':n': product.productName,
+          ':c': product.code,
+          ':p': product.price,
+          ':m': product.model,
+          ':u': product.productUrl
+        }
       }
-    }).promise();
+    ).promise();
 
     data.Attributes!.id = productId;
     
