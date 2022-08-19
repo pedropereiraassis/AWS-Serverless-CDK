@@ -1,6 +1,6 @@
 require('dotenv').config();
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
-import { Product, ProductRepository } from '/opt/nodejs/productsLayer';
+import { Product, ProductRequest, ProductRepository } from '/opt/nodejs/productsLayer';
 import { DynamoDB, Lambda } from 'aws-sdk';
 import { ProductEvent, ProductEventType } from '/opt/nodejs/productsEventsLayer';
 import { captureAWS } from 'aws-xray-sdk';
@@ -23,7 +23,7 @@ export async function handler(event: APIGatewayProxyEvent,
   
   if (event.resource === '/products') {
     console.log('POST /products');
-    const product = JSON.parse(event.body!) as Product;
+    const product = buildProduct(JSON.parse(event.body!) as Product);
     const productCreated = await productRepository.create(product);
 
     const response = await sendProductEvent(productCreated, ProductEventType.CREATED, 
@@ -39,7 +39,7 @@ export async function handler(event: APIGatewayProxyEvent,
 
     if (event.httpMethod === 'PUT') {
       console.log(`PUT /products/${productId}`);
-      const product = JSON.parse(event.body!) as Product;
+      const product = buildProduct(JSON.parse(event.body!) as Product);
       
       try {
         const productUpdated = await productRepository.updateProduct(productId, product);
@@ -91,6 +91,19 @@ export async function handler(event: APIGatewayProxyEvent,
   }
 }
 
+function buildProduct(productRequest: ProductRequest): Product {
+  
+  const product: ProductRequest = {
+    productName: productRequest.productName,
+    code: productRequest.code,
+    price: productRequest.price,
+    model: productRequest.model,
+    productUrl: productRequest.productUrl
+  }
+
+  return product;
+}
+
 function sendProductEvent(product: Product, eventType: ProductEventType,
   email: string, lambdaRequestId: string) {
 
@@ -98,7 +111,7 @@ function sendProductEvent(product: Product, eventType: ProductEventType,
     email: email,
     eventType: eventType,
     productCode: product.code,
-    productId: product.id,
+    productId: product.id!,
     productPrice: product.price,
     requestId: lambdaRequestId
   }
