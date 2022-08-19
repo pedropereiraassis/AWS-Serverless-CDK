@@ -1,5 +1,4 @@
 require('dotenv').config();
-import { EnvironmentFileType } from "aws-cdk-lib/aws-ecs";
 import { Callback, Context } from "aws-lambda";
 import { DynamoDB } from "aws-sdk";
 import { captureAWS } from "aws-xray-sdk";
